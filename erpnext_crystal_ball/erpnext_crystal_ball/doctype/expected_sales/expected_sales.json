@@ -1,88 +1,64 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2024-06-30 15:36:27.402166",
+ "creation": "2024-06-30 21:22:11.596473",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "section_break_p7ql",
-  "amended_from"
+  "section_break_jakt",
+  "posting_date",
+  "column_break_xxsc",
+  "expected_date",
+  "expected_end",
+  "section_break_esxs",
+  "item_records"
  ],
  "fields": [
   {
-   "fieldname": "section_break_p7ql",
+   "fieldname": "section_break_jakt",
    "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "item_code",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Item Code",
-   "options": "Item",
-   "reqd": 1
-  },
-  {
-   "fetch_from": "item_code.item_name",
-   "fieldname": "item_name",
-   "fieldtype": "Data",
-   "label": "Item Name"
-  },
-  {
-   "fieldname": "stock_uom",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Stock UOM",
-   "options": "UOM",
-   "reqd": 1
-  },
-  {
-   "fieldname": "qty",
-   "fieldtype": "Float",
-   "in_list_view": 1,
-   "label": "Qty",
-   "reqd": 1
-  },
-  {
-   "fieldname": "expected_by",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Expected By",
-   "reqd": 1
   },
   {
    "default": "Today",
    "fieldname": "posting_date",
    "fieldtype": "Date",
-   "label": "Posing Date",
+   "in_list_view": 1,
+   "label": "Posting Date"
+  },
+  {
+   "fieldname": "expected_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Expected Start",
    "reqd": 1
   },
   {
-   "fieldname": "column_break_qzek",
-   "fieldtype": "Column Break"
+   "fieldname": "expected_end",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Expected End",
+   "reqd": 1
   },
   {
-   "fieldname": "section_break_hoka",
+   "fieldname": "section_break_esxs",
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "column_break_ugmt",
-   "fieldtype": "Column Break"
+   "fieldname": "item_records",
+   "fieldtype": "Table",
+   "label": "Item Records",
+   "options": "Item records",
+   "reqd": 1
   },
   {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Expected Sales",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
+   "fieldname": "column_break_xxsc",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-06-30 15:36:27.402166",
+ "modified": "2024-06-30 22:46:01.180275",
  "modified_by": "Administrator",
  "module": "Erpnext Crystal Ball",
  "name": "Expected Sales",
