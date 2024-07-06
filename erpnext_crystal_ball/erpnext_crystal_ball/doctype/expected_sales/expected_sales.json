@@ -7,11 +7,16 @@
  "field_order": [
   "section_break_jakt",
   "posting_date",
+  "term",
+  "type",
+  "fiscal_year",
   "column_break_xxsc",
   "expected_date",
   "expected_end",
+  "month",
   "section_break_esxs",
-  "item_records"
+  "item_records",
+  "amended_from"
  ],
  "fields": [
   {
@@ -23,7 +28,8 @@
    "fieldname": "posting_date",
    "fieldtype": "Date",
    "in_list_view": 1,
-   "label": "Posting Date"
+   "label": "Posting Date",
+   "reqd": 1
   },
   {
    "fieldname": "expected_date",
@@ -53,12 +59,50 @@
   {
    "fieldname": "column_break_xxsc",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "term",
+   "fieldtype": "Select",
+   "label": "Term",
+   "options": "Weekly\nMonthly\nQuarterly\nAnnually",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Expected Sales",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "label": "Type",
+   "options": "Rolling\nCommitted\nAnnual and Updated Annual",
+   "reqd": 1
+  },
+  {
+   "fieldname": "month",
+   "fieldtype": "Select",
+   "label": "Month",
+   "options": "January\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember",
+   "reqd": 1
+  },
+  {
+   "fieldname": "fiscal_year",
+   "fieldtype": "Link",
+   "label": "Fiscal Year",
+   "options": "Fiscal Year",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-06-30 22:46:01.180275",
+ "modified": "2024-07-03 17:22:47.982993",
  "modified_by": "Administrator",
  "module": "Erpnext Crystal Ball",
  "name": "Expected Sales",
