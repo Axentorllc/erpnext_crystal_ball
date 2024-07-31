@@ -19,14 +19,7 @@ def get_columns(filters=None):
     ] 
     
 	columns= [
-		# {
-		# 	"fieldname": "item",
-		# 	"label": _("Item"),
-		# 	"fieldtype": "Link",
-		# 	"options": "Item",
-		# 	"width": 180,
-			
-		# },
+
 		{
 			"fieldname": "code",
 			"label": _("Item Code"),
@@ -72,92 +65,79 @@ def get_columns(filters=None):
 			"fieldtype": "Float",
 			"width": 120,
 		})
-		columns.append({
-			"fieldname": f"{month}_delvery_note",
-			"label": _(f"{month} Delivery Note"),
-			"fieldtype": "Float",
-			"width": 120,
-		})
-
+		
 	return columns
 
 def get_data(filters=None):
+
+	return get_processed_date(filters)
 	
-	processed_data = []
 	
-	items_list=frappe.db.get_list("Expected Sales",fields=['name',])
-	# rolling_list = frappe.db.get_list("Expected Sales",fields=['name','posting_date'],  filters={"type": ("=", "Rolling")})
-	# print(rolling_list)
-	# max_rolling_document =max(rolling_list, key=lambda x: x["posting_date"])
-	# max_items_list=items_list.append(max_rolling_document)
+def get_processed_date(filters=None):
+	if filters:
+		
+		ExpectedSales_list=[]
+		processed_data = []
+		processed_items_dict = {}
+		
+		
+		month_labels = ["January", "February", "March", "April", "May", "June",
+						"July", "August", "September", "October", "November", "December"]
 
-	sum=0
-
-	# delivery_note_list=frappe.db.get_list("Delivery Note",fields=['name',])
-	# for name in delivery_note_list:
-	# 	docc=frappe.get_doc("Delivery Note",ields=['name',])
-	# 	for raww in docc.items:
-	# 		delivery_qty=raww.qty
-	# 		delivery_item_code=raw.item_code
-
-	for item in items_list:
-		doc=frappe.get_doc("Expected Sales",item.name)
-		for item in doc.item_records:
-			posting_date=doc.posting_date
-			month=doc.month
-			Type=doc.type
-			item_code=item.item_code
-			item_name=item.item_name
-			# item_bom=frappe.db.get_value('Item',item.item_code,'default_bom')
-			item_qty=item.qty
+		not_rolling_list=frappe.db.get_list("Expected Sales",fields=['name',],
+									  filters={'type': ['!=', 'Rolling'],'docstatus':1,},pluck='name')
+		
+		for mon in month_labels:
+			max_rolling_list = frappe.db.get_list("Expected Sales",fields=["max(name) as name",'month',"max(posting_date) as date"],
+										filters={'docstatus':1,"type": 'Rolling',"month":mon})
 			
-			stock_proj=frappe._dict({'item_code':item_code})
-			col , vals=execute_proj_qty(stock_proj)
-			for raw in vals:
-				sum+=raw[16]
+			for rolling in max_rolling_list:
 
-			month_labels = ["January", "February", "March", "April", "May", "June",
-					"July", "August", "September", "October", "November", "December"] 
+				if rolling.get('name') !=None: 
+					ExpectedSales_list.append(rolling.get('name'))
+		
+		ExpectedSales_list.extend(not_rolling_list)
 
-			if month in month_labels:
-				if Type=="Committed":
-					processed_item = {
-						"item": doc.name,
-						'code': item_code,
-						'item_name':item_name,
-						'avil_qty':sum,
-						f"{month}_com":item_qty,
-						f"{month}": item_qty,
-					}
-
-			if month in month_labels: 
-				if Type=="Rolling": 
-					posting_date
-					processed_item = {
-						"item": doc.name,
-						'code': item_code,
-						'item_name':item_name,
-						'avil_qty':sum,
-						f"{month}_rol":item_qty,
-						f"{month}":item_qty,
-					}
+		for name in ExpectedSales_list:
 			
-			if month in month_labels:
-				if Type=="Annual and Updated Annual":
-					processed_item = {
-						"item": doc.name,
-						'code': item_code,
-						'item_name':item_name,
-						'avil_qty':sum,
-						f"{month}_ann":item_qty,
-						f"{month}":item_qty,
-					}
-			
-			processed_data.append(processed_item)
-	return processed_data
-	
+			doc=frappe.get_doc("Expected Sales",name)
+			actual_qty=0
+			for item in doc.item_records:
+				doc.month
+				Type=doc.type
+				item_code=item.item_code
+				item_name=item.item_name
+				item_qty=item.qty
+				stock_proj=frappe._dict({'item_code':item_code})
+				cols , vals=execute_proj_qty(stock_proj)
+				for raw in vals:
+					actual_qty+=raw[7] 
+				
+				for month in month_labels:
+					if doc.month==month :
+						if item_code not in processed_items_dict:
+							
+							processed_items_dict[item_code] = {
+								
+								'code': item_code,
+								'item_name':item_name,
+								'avil_qty':actual_qty,
+								**{f"{month}_com":0 for month in month_labels}, # ** used for unpacking dict 
+								**{f"{month}_rol":0 for month in month_labels},
+								**{f"{month}_ann":0 for month in month_labels},
+								**{f"{month}":0 for month in month_labels}	
+							}
+						if doc.type == 'Committed':
+							processed_items_dict[item_code][f"{doc.month}_com"] += item_qty
+							processed_items_dict[item_code][f"{doc.month}"]=processed_items_dict[item_code][f"{doc.month}_com"]
+						elif doc.type == 'Annual':
+							processed_items_dict[item_code][f"{doc.month}_ann"] += item_qty
+							processed_items_dict[item_code][f"{doc.month}"]=processed_items_dict[item_code][f"{doc.month}_ann"]
+						elif doc.type == 'Rolling':
+							processed_items_dict[item_code][f"{doc.month}_rol"] += item_qty
+							if processed_items_dict[item_code][f"{doc.month}_ann"] == 0 : 
+								processed_items_dict[item_code][f"{doc.month}"]=processed_items_dict[item_code][f"{doc.month}_rol"]
+						
+		processed_data=list(processed_items_dict.values())
+		return processed_data
 
-
-# data = frappe._dict({'bom':item_bom,'qty_to_make':item_qty,'show_exploded_view':True})
-			# column,items=execute_base_report(data)
-			# aggregated_items = {} 
