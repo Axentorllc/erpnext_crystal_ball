@@ -76,6 +76,7 @@ def get_data(filters=None):
 def get_processed_date(filters=None):
 	if filters:
 		
+		ExpectedSales_set=set()
 		ExpectedSales_list=[]
 		processed_data = []
 		processed_items_dict = {}
@@ -88,16 +89,28 @@ def get_processed_date(filters=None):
 									  filters={'type': ['!=', 'Rolling'],'docstatus':1,},pluck='name')
 		
 		for mon in month_labels:
-			max_rolling_list = frappe.db.get_list("Expected Sales",fields=["max(name) as name",'month',"max(posting_date) as date"],
-										filters={'docstatus':1,"type": 'Rolling',"month":mon})
 			
+			values={'month':mon}
+			querry="""SELECT es.name, es.month ,es.posting_date 
+							FROM `tabExpected Sales` es
+							JOIN `tabItem records` ir ON es.name = ir.parent
+							WHERE es.docstatus = 1
+							AND es.type = 'Rolling'
+							AND es.month = %(month)s
+							AND es.posting_date = (
+								SELECT MAX(sub_es.posting_date)
+								FROM `tabExpected Sales` sub_es
+								WHERE sub_es.docstatus = 1
+									AND sub_es.type = 'Rolling'
+									AND sub_es.month =  %(month)s
+							)"""
+			max_rolling_list=frappe.db.sql(querry,values=values,as_dict=True)
 			for rolling in max_rolling_list:
 
 				if rolling.get('name') !=None: 
-					ExpectedSales_list.append(rolling.get('name'))
-		
+					ExpectedSales_set.add(rolling.get('name'))
+		ExpectedSales_list=list(ExpectedSales_set)
 		ExpectedSales_list.extend(not_rolling_list)
-
 		for name in ExpectedSales_list:
 			
 			doc=frappe.get_doc("Expected Sales",name)
@@ -122,7 +135,7 @@ def get_processed_date(filters=None):
 								'code': item_code,
 								'item_name':item_name,
 								'avil_qty':actual_qty,
-								**{f"{month}_com":0 for month in month_labels}, # ** used for unpacking dict 
+								**{f"{month}_com":0 for month in month_labels}, 
 								**{f"{month}_rol":0 for month in month_labels},
 								**{f"{month}_ann":0 for month in month_labels},
 								**{f"{month}":0 for month in month_labels}	
@@ -130,13 +143,13 @@ def get_processed_date(filters=None):
 						if doc.type == 'Committed':
 							processed_items_dict[item_code][f"{doc.month}_com"] += item_qty
 							processed_items_dict[item_code][f"{doc.month}"]=processed_items_dict[item_code][f"{doc.month}_com"]
-						elif doc.type == 'Annual':
-							processed_items_dict[item_code][f"{doc.month}_ann"] += item_qty
-							processed_items_dict[item_code][f"{doc.month}"]=processed_items_dict[item_code][f"{doc.month}_ann"]
 						elif doc.type == 'Rolling':
 							processed_items_dict[item_code][f"{doc.month}_rol"] += item_qty
-							if processed_items_dict[item_code][f"{doc.month}_ann"] == 0 : 
-								processed_items_dict[item_code][f"{doc.month}"]=processed_items_dict[item_code][f"{doc.month}_rol"]
+							processed_items_dict[item_code][f"{doc.month}"]=processed_items_dict[item_code][f"{doc.month}_rol"]
+						elif doc.type == 'Annual':
+							processed_items_dict[item_code][f"{doc.month}_ann"] += item_qty
+							if processed_items_dict[item_code][f"{doc.month}_rol"] == 0 : 
+								processed_items_dict[item_code][f"{doc.month}"]=processed_items_dict[item_code][f"{doc.month}_ann"]
 						
 		processed_data=list(processed_items_dict.values())
 		return processed_data
