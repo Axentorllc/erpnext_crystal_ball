@@ -1,0 +1,27 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "creation": "2024-07-15 12:18:26.883228",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": "HCPC Main Printing Style",
+ "letterhead": null,
+ "modified": "2024-08-08 14:37:33.144541",
+ "modified_by": "Administrator",
+ "module": "Erpnext Crystal Ball",
+ "name": "Adjusting Stock Projected Qty",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Expected Sales",
+ "report_name": "Adjusting Stock Projected Qty",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ]
+}
