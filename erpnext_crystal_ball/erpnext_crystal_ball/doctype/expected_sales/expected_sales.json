@@ -81,7 +81,7 @@
    "fieldname": "type",
    "fieldtype": "Select",
    "label": "Type",
-   "options": "Rolling\nCommitted\nAnnual and Updated Annual",
+   "options": "Rolling\nCommitted\nAnnual",
    "reqd": 1
   },
   {
@@ -102,7 +102,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-03 17:22:47.982993",
+ "modified": "2024-07-10 12:23:39.914702",
  "modified_by": "Administrator",
  "module": "Erpnext Crystal Ball",
  "name": "Expected Sales",
