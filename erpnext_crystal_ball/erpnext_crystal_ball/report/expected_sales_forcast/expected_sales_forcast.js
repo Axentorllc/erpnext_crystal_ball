@@ -1,5 +1,6 @@
 // Copyright (c) 2024, Carlos and contributors
 // For license information, please see license.txt
+// import DataTable from "frappe-datatable"
 
 frappe.query_reports["Expected Sales Forcast"] = {
 	"filters": [
@@ -10,41 +11,7 @@ frappe.query_reports["Expected Sales Forcast"] = {
 			options:"Fiscal Year"
 			
 		},
-		// {
-		// 	fieldname: "expected_end",
-		// 	label: __("Expected End"),
-		// 	fieldtype: "Date",
-
-		// },{
-		// 	fieldname: "Type",
-		// 	label: __("Type"),
-		// 	fieldtype: "Select",
-		// 	options: ["Rolling", "Committed","Annual"]
-
-		// },
-		// {
-		// 	fieldname: "lead_time",
-		// 	label: __("Lead Time"),
-		// 	fieldtype: "Int",
-		// },
-		// {
-		// 	fieldname: "coeverage",
-		// 	label: __("Coverage"),
-		// 	fieldtype: "Int",
-		// },
-		// {
-		// 	fieldname: "posting_date",
-		// 	label: __("Posting_Date"),
-		// 	fieldtype: "Date",
-		// },
-		{
-			fieldname: "aggregate",
-			label: __("Aggregate Item Code"),
-			fieldtype: "Check",
-
-		}
-
-
+	
 	],
 	
 	formatter: function (value, row, column, data, default_formatter) {
