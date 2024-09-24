@@ -21,7 +21,7 @@ frappe.query_reports["Adjusting Stock Projected Qty"] = {
 			fieldname: "material_type",
 			label: __("Group_by"),
 			fieldtype: "Select",
-			options: "\nRaw Material\nPack Material",
+			options: "\nraw material\npack material",
 			// reqd:1
 			
 		},
