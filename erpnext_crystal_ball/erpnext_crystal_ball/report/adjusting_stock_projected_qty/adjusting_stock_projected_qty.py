@@ -18,7 +18,8 @@ class AdjustedStockQty:
 		self.data_structure={}
 		self.raw_list=[]
 		self.pack_list=[]
-		self.months=self.get_months_range(self.filters.get('from_date'),self.filters.get('to_date'))
+		today = datetime.today()
+		self.months=self.get_months_range(today.strftime('%Y-%m-%d'),self.filters.get('to_date'))
 		self.group=self.filters.get('material_type')
 		self.fiscal_year=self.filters.get('fiscal_year')
 		self.safety_stock=self.filters.get('safety_stock')
@@ -143,7 +144,6 @@ class AdjustedStockQty:
 		self.material_list = self.filter_by_material_type()
 		self.set_processed_materials()
 
-		print(self.data_structure)
 		return self.processed_materials
 
 

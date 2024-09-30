@@ -3,13 +3,7 @@
 
 frappe.query_reports["Adjusting Stock Projected Qty"] = {
 	"filters": [
-		{
-			fieldname: "from_date",
-			label: __("From Date"),
-			fieldtype: "Date",
-			reqd:1
-			
-		},
+
 		{
 			fieldname: "to_date",
 			label: __("To Date"),
