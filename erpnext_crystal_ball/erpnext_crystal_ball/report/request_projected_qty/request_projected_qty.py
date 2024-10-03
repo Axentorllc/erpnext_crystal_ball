@@ -14,6 +14,7 @@ def execute(filters=None):
 	columns, data = get_columns(), get_data(filters)
 	return columns, data
 
+
 def get_columns():
 	columns= [
 			{
@@ -53,38 +54,53 @@ def get_columns():
 
 
 def get_data(filters=None):
-    processed_items = []
-    today = datetime.today()
+	"""
+	Fetches and processes raw item data.
+	:param filters: Filters for the data (optional)
+	:return: List of dictionaries representing processed items
+	"""
+	
+	fiscal_year=filters.get('fiscal_year')
+	include_safety_stock=filters.get('safety_stock')
+	processed_items = []
+	today = datetime.today()
 
-    data_dict = {
-        'from_date': today.strftime('%Y-%m-%d'),
-        'to_date': '2024-12-31',
-        'fiscal_year': '2024-2025'
-    }
+	# Define parameters for the adjusted quantity function
+	adjusted_qty_params = {
+		'from_date': today.strftime('%Y-%m-%d'),
+		'to_date': '2024-12-31',
+		'fiscal_year': fiscal_year
+	}
 
-    columns, data = adjusted_qty(data_dict)
+	if include_safety_stock:
+		adjusted_qty_params['safety_stock']=True
 
-    for row in data:
-        raw_item_code = row.get('raw_item')
-        lead_time = row.get('lead_time')
-        coverage_days = row.get('coverage_days')
+	# Get the adjusted quantity data
+	columns, data = adjusted_qty(adjusted_qty_params)
 
-        to_date = today + timedelta(days=lead_time + coverage_days)
-        month = to_date.strftime('%B')
+	for row in data:
+		raw_item_code = row.get('raw_item')
+		lead_time = row.get('lead_time')
+		coverage_days = row.get('coverage_days')
 
-        month_diff_key = f'{month}_diff_qty'
-        diff_qty = row.get(month_diff_key)  # Changed d to row for clarity
+		to_date = today + timedelta(days=lead_time + coverage_days)
+		month = to_date.strftime('%B')
 
-        processed_item = {
-            'raw_item': raw_item_code,
-            'description': row.get('description'),
-            'lead_time': lead_time,
-            'coverage_days': coverage_days,
-            'diff_qty': diff_qty
-        }
-        processed_items.append(processed_item)
+		# Get the difference quantity for the calculated month
+		month_diff_key = f'{month}_diff_qty'
+		diff_qty = row.get(month_diff_key, 0)  
 
-    return processed_items
+
+		processed_item = {
+			'raw_item': raw_item_code,
+			'description': row.get('description'),
+			'lead_time': lead_time,
+			'coverage_days': coverage_days,
+			'diff_qty': diff_qty
+		}
+		processed_items.append(processed_item)
+
+	return processed_items
 
 
 @frappe.whitelist()
@@ -94,8 +110,8 @@ def order_material_request():
 
 	doc = frappe.get_doc({
 		'doctype': 'Material Request',
-        'material_request_type': 'Purchase',  
-        'transaction_date': datetime.today().strftime('%Y-%m-%d'),
+		'material_request_type': 'Purchase',  
+		'transaction_date': datetime.today().strftime('%Y-%m-%d'),
 		'items': []  # Initialize the items table
 	})
 
