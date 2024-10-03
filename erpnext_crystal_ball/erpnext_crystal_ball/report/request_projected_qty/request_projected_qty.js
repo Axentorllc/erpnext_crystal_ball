@@ -3,8 +3,20 @@
 
 frappe.query_reports["Request Projected Qty"] = {
 	"filters": [
-
+		{
+			fieldname: "fiscal_year",
+			label: __("Fiscal Year"),
+			fieldtype: "Link",
+			options: "Fiscal Year",
+			reqd:1
+		},
+		{
+			fieldname: "safety_stock",
+			label: __("Include Safty Stock"),
+			fieldtype: "Check",
+		},
 	],
+	
 	onload: function(report) {
 		report.page.add_inner_button(__('Material Request'), function() {
 			frappe.msgprint(__('Processing Material Request...'));
