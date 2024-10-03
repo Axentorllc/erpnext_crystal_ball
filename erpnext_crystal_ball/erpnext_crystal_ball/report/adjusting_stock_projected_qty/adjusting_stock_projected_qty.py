@@ -99,6 +99,7 @@ class AdjustedStockQty:
 				"width": 140,
 				"convertible": "qty",
 			},
+			
 			{
 				"label": _("Actual Safety Qty"),
 				"fieldname": "actual_qty",
@@ -108,6 +109,15 @@ class AdjustedStockQty:
 			},
 			
 		]
+		if self.safety_stock:
+			columns.insert(7,{
+				"label": _("Safety Stock"),
+				"fieldname": "safety_stock",
+				"fieldtype": "Float",
+				"width": 140,
+				"convertible": "qty",
+
+			})
 		for month in self.months:
 			columns.append({
 				"label": _(f"{month} Required Qty"),
@@ -183,6 +193,7 @@ class AdjustedStockQty:
 				description=raw_material_info.get('description')
 				ordered_qty=raw_material_info.get('ordered_qty')
 				reserved_qty=raw_material_info.get('reserved_qty')
+				safety_stock=raw_material_info.get('safety_stock')
 				actual_qty=raw_material_info.get('actual_qty')
 				
 
@@ -194,6 +205,7 @@ class AdjustedStockQty:
 							'avail_qty':avilable_qty,
 							'ordered_qty':ordered_qty,
 							'reserved_qty':reserved_qty,
+							'safety_stock':safety_stock,
 							'actual_qty':actual_qty
 				}
 
@@ -270,6 +282,7 @@ class AdjustedStockQty:
 					'coverage_days': coverage_days,
 					'ordered_qty':ordered_qty,
 					'reserved_qty':reserved_qty,
+					'safety_stock':safety_stock,
 					'actual_qty':actual_safety_qty,
 					f'{month}_diff_qty':0,
 
