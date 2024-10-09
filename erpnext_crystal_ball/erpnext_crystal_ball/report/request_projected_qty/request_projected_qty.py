@@ -59,9 +59,9 @@ def get_data(filters=None):
 	:param filters: Filters for the data (optional)
 	:return: List of dictionaries representing processed items
 	"""
-	
+
 	fiscal_year=filters.get('fiscal_year')
-	include_safety_stock=filters.get('safety_stock')
+	include_safety_stock=filters.get('safety_stock',False)
 	processed_items = []
 	today = datetime.today()
 
@@ -104,9 +104,9 @@ def get_data(filters=None):
 
 
 @frappe.whitelist()
-def order_material_request():
+def order_material_request(filters):
 	
-	processed_items = get_data()
+	processed_items = get_data(filters)
 
 	doc = frappe.get_doc({
 		'doctype': 'Material Request',

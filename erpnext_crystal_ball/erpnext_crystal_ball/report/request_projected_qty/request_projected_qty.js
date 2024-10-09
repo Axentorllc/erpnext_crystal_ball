@@ -23,6 +23,7 @@ frappe.query_reports["Request Projected Qty"] = {
 			
 			frappe.call({
 				method: "erpnext_crystal_ball.erpnext_crystal_ball.report.request_projected_qty.request_projected_qty.order_material_request",
+				arguments:filters,
 				callback: function(r) {
 			
 					if (r.message === "success") {
