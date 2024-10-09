@@ -1,0 +1,29 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "creation": "2024-09-29 13:03:43.371290",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": "HCPC Main Printing Style",
+ "letterhead": null,
+ "modified": "2024-10-09 21:59:36.875126",
+ "modified_by": "Administrator",
+ "module": "Erpnext Crystal Ball",
+ "name": "Request Projected Qty",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Expected Sales",
+ "reference_report": "",
+ "report_name": "Request Projected Qty",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ],
+ "timeout": 0
+}
