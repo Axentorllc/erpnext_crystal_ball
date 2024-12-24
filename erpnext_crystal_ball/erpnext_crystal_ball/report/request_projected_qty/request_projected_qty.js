@@ -8,35 +8,45 @@ frappe.query_reports["Request Projected Qty"] = {
 			label: __("Fiscal Year"),
 			fieldtype: "Link",
 			options: "Fiscal Year",
-			reqd:1
+			reqd: 1
 		},
 		{
 			fieldname: "safety_stock",
-			label: __("Include Safty Stock"),
+			label: __("Include Safety Stock"),
 			fieldtype: "Check",
 		},
 	],
-	
+
+	// Function to fetch all filter values as parameters
+	get_filters_as_params: function() {
+		let filters = {};
+		this.filters.forEach(filter => {
+			filters[filter.fieldname] = frappe.query_report.get_filter_value(filter.fieldname);
+		});
+		return filters;
+	},
+
 	onload: function(report) {
+
 		report.page.add_inner_button(__('Material Request'), function() {
 			frappe.msgprint(__('Processing Material Request...'));
+
+			let filters_as_params = frappe.query_reports["Request Projected Qty"].get_filters_as_params();
 			
 			frappe.call({
 				method: "erpnext_crystal_ball.erpnext_crystal_ball.report.request_projected_qty.request_projected_qty.order_material_request",
-				arguments:filters,
+				args: {
+					filters: filters_as_params
+				},
 				callback: function(r) {
-			
-					if (r.message === "success") {
+					if (r.message) {
 						frappe.msgprint(__('Material Request created successfully.'));
-						frappe.set_route('Form', 'Material Request');
+						frappe.set_route('Form', 'Material Request', r.message);
 					} else {
 						frappe.msgprint(__('Failed to create Material Request.'));
 					}
 				}
 			});
-		},)
+		});
 	},
-
 };
-
-
