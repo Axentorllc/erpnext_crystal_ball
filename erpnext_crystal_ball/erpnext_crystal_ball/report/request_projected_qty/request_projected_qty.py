@@ -105,7 +105,7 @@ def get_data(filters=None):
 
 @frappe.whitelist()
 def order_material_request(filters):
-	
+	filters = frappe.parse_json(filters)
 	processed_items = get_data(filters)
 
 	doc = frappe.get_doc({
@@ -117,16 +117,15 @@ def order_material_request(filters):
 
 	for item in processed_items:
 		item_code = item.get('raw_item')
-		qty = item.get('diff_qty')
-
+		qty = item.get('diff_qty') or 1.0
 		# Append each item to the Material Request's 'items' table
 		doc.append('items', {
 			'item_code': item_code,
 			'qty': qty,
 			'schedule_date': (datetime.today() + timedelta(days=item.get('lead_time'))).strftime('%Y-%m-%d'),
 		})
-	
-
+		
 	doc.insert()
 	frappe.db.commit()  # Commit the transaction to the database
-	return "success"
+
+	return doc.name
