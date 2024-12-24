@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:{type}-{month}",
  "creation": "2024-06-30 21:22:11.596473",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -102,10 +103,11 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-10 12:23:39.914702",
+ "modified": "2024-12-23 19:54:38.206412",
  "modified_by": "Administrator",
  "module": "Erpnext Crystal Ball",
  "name": "Expected Sales",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
