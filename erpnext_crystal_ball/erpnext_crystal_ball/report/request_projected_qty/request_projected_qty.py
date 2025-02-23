@@ -68,7 +68,7 @@ def get_data(filters=None):
 	# Define parameters for the adjusted quantity function
 	adjusted_qty_params = {
 		'from_date': today.strftime('%Y-%m-%d'),
-		'to_date': '2024-12-31',
+		'to_date': f"{fiscal_year}-{today.strftime('%m-%d')}",
 		'fiscal_year': fiscal_year
 	}
 
@@ -90,6 +90,8 @@ def get_data(filters=None):
 		month_diff_key = f'{month}_diff_qty'
 		diff_qty = row.get(month_diff_key, 0)  
 
+		if diff_qty >= 0:
+			continue
 
 		processed_item = {
 			'raw_item': raw_item_code,
