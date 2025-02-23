@@ -68,7 +68,7 @@ def get_data(filters=None):
 	# Define parameters for the adjusted quantity function
 	adjusted_qty_params = {
 		'from_date': today.strftime('%Y-%m-%d'),
-		'to_date': f"{fiscal_year}-{today.strftime('%m-%d')}",
+		'to_date': f"{fiscal_year}-12-31",
 		'fiscal_year': fiscal_year
 	}
 
