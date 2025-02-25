@@ -30,7 +30,7 @@ frappe.query_reports["Request Projected Qty"] = {
 
 		report.page.add_inner_button(__('Material Request'), function() {
 			frappe.msgprint(__('Processing Material Request...'));
-
+			
 			let filters_as_params = frappe.query_reports["Request Projected Qty"].get_filters_as_params();
 			
 			frappe.call({
@@ -38,6 +38,8 @@ frappe.query_reports["Request Projected Qty"] = {
 				args: {
 					filters: filters_as_params
 				},
+				freeze: true,
+				freeze_message: "Processing Material Request... ...",
 				callback: function(r) {
 					if (r.message) {
 						frappe.msgprint(__('Material Request created successfully.'));
