@@ -19,7 +19,7 @@ class AdjustedStockQty:
 		self.raw_list=[]
 		self.pack_list=[]
 		today = datetime.today()
-		self.months=self.get_months_range(today.strftime('%Y-%m-%d'),self.filters.get('to_date'))
+		self.months=self.get_months_range(self.filters.get('from_date') ,self.filters.get('to_date'))
 		self.group=self.filters.get('material_type')
 		self.fiscal_year=self.filters.get('fiscal_year')
 		self.safety_stock=self.filters.get('safety_stock')
