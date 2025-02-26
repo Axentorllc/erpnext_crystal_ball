@@ -93,6 +93,7 @@ def get_data(filters=None):
 		if diff_qty >= 0:
 			continue
 
+		diff_qty = abs(row.get(month_diff_key, 0))
 		processed_item = {
 			'raw_item': raw_item_code,
 			'description': row.get('description'),
