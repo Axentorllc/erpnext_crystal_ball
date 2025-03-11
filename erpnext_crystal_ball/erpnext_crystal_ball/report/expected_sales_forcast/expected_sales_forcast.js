@@ -8,7 +8,8 @@ frappe.query_reports["Expected Sales Forcast"] = {
 			fieldname: "fiscal_year",
 			label: __("Fiscal Year"),
 			fieldtype: "Link",
-			options:"Fiscal Year"
+			options:"Fiscal Year",
+			reqd:1
 			
 		},
 	
