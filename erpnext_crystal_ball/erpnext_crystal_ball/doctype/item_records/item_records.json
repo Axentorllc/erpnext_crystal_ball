@@ -12,7 +12,9 @@
   "column_break_uvsj",
   "qty",
   "column_break_izcu",
-  "stock_uom"
+  "stock_uom",
+  "column_break_izna",
+  "is_promotion"
  ],
  "fields": [
   {
@@ -55,12 +57,23 @@
   {
    "fieldname": "column_break_uvsj",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_izna",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_promotion",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Is Promotion"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-10-01 13:18:01.568380",
+ "modified": "2025-03-11 14:05:19.932461",
  "modified_by": "Administrator",
  "module": "Erpnext Crystal Ball",
  "name": "Item records",
