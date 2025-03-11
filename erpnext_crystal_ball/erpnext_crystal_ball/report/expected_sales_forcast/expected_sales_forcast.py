@@ -104,54 +104,6 @@ def process_sales_data(months,filters=None):
 
 	return processed_data
 
-
-def process_sales_items(expected_sales_docs, processed_items_dict ,months):
-	""" Processes each sales item in the expected_sales_docs.
-	    Updates the processed items dictionary.
-		Aggregating available quantities for each fg-item. 
-	"""
-
-	for name in expected_sales_docs:
-		sales_doc=frappe.get_doc("Expected Sales",name)
-		item_records=sales_doc.item_records
-
-		for item in item_records:
-			Type=sales_doc.type
-			item_code=item.item_code
-			item_name=item.item_name
-			item_qty=item.qty
-
-			# fetch available fg qty in all the stocks
-			fg_stock_qty=get_fg_stock_qty(item_code)
-	
-			if item_code not in processed_items_dict:
-				
-				# Initialize data structure
-				processed_items_dict[item_code] = {
-					
-					'code': item_code,
-					'item_name':item_name,
-					'avil_qty':fg_stock_qty,
-					**{f"{month}_com":0 for month in months}, 
-					**{f"{month}_rol":0 for month in months},
-					**{f"{month}_ann":0 for month in months},
-					**{f"{month}":0 for month in months}	
-				}
-
-			column_key = f"{sales_doc.month}_{sales_doc.type.lower()[:3]}"  # 'month_com', 'month_rol', 'month_ann'
-			processed_items_dict[item_code][column_key] += item_qty
-
-			# Update the total for the month
-			if sales_doc.type=='Committed':
-				processed_items_dict[item_code][f"{sales_doc.month}"] = processed_items_dict[item_code][column_key]
-			elif sales_doc.type =='Rolling':
-				processed_items_dict[item_code][f"{sales_doc.month}"] = processed_items_dict[item_code][column_key]
-			elif sales_doc.type =='Annual' and processed_items_dict[item_code][f"{sales_doc.month}_rol"]==0:
-				processed_items_dict[item_code][f"{sales_doc.month}"] = processed_items_dict[item_code][column_key]
-
-	return processed_items_dict
-
-
 def get_latest_rolling_list(months,expected_sales_docs):
 	"""
 	Fetches the latest rolling expected sales entries for each month.
@@ -172,6 +124,51 @@ def get_latest_rolling_list(months,expected_sales_docs):
 
 	return expected_sales_docs
 
+def process_sales_items(expected_sales_docs, processed_items_dict, months):
+    """Processes each sales item in the expected_sales_docs.
+    
+    Updates the processed items dictionary, aggregating available quantities for each fg-item.
+    """
+
+    for name in expected_sales_docs:
+        sales_doc = frappe.get_doc("Expected Sales", name)
+        item_records = sales_doc.item_records
+
+        for item in item_records:
+            item_code, item_name, item_qty, is_promotion = (
+                item.item_code, item.item_name, item.qty, item.is_promotion
+            )
+
+            # Fetch available FG qty in all stocks
+            fg_stock_qty = get_fg_stock_qty(item_code)
+
+            # Unique key to separate promotions
+            unique_key = f"{item_code}_promotion" if is_promotion else item_code
+
+            if unique_key not in processed_items_dict:
+                # Initialize data structure
+                processed_items_dict[unique_key] = {
+                    "code": item_code,
+                    "item_name": item_name,
+                    "avil_qty": fg_stock_qty,
+                    **{f"{month}_com": 0 for month in months},
+                    **{f"{month}_rol": 0 for month in months},
+                    **{f"{month}_ann": 0 for month in months},
+                    **{month: 0 for month in months},
+                }
+
+            column_key = f"{sales_doc.month}_{sales_doc.type.lower()[:3]}"  # 'month_com', 'month_rol', 'month_ann'
+            processed_items_dict[unique_key][column_key] += item_qty
+
+            # Update the total for the month
+            if sales_doc.type == 'Committed':
+                processed_items_dict[unique_key][sales_doc.month] = processed_items_dict[unique_key][column_key]
+            elif sales_doc.type == 'Rolling':
+                processed_items_dict[unique_key][sales_doc.month] = processed_items_dict[unique_key][column_key]
+            elif sales_doc.type == 'Annual' and processed_items_dict[unique_key][f"{sales_doc.month}_rol"] == 0:
+                processed_items_dict[unique_key][sales_doc.month] = processed_items_dict[unique_key][column_key]
+
+    return processed_items_dict
 
 def get_fg_stock_qty(item_code):
 	"""
