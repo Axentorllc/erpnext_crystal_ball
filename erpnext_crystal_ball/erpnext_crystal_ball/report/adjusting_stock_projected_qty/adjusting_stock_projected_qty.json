@@ -1,5 +1,6 @@
 {
  "add_total_row": 0,
+ "add_translate_data": 0,
  "columns": [],
  "creation": "2024-07-15 12:18:26.883228",
  "disabled": 0,
@@ -8,9 +9,9 @@
  "filters": [],
  "idx": 0,
  "is_standard": "Yes",
- "letter_head": "HCPC Main Printing Style",
+ "letter_head": "",
  "letterhead": null,
- "modified": "2024-09-29 16:04:28.632247",
+ "modified": "2025-03-18 11:53:39.844982",
  "modified_by": "Administrator",
  "module": "Erpnext Crystal Ball",
  "name": "Adjusting Stock Projected Qty",
@@ -22,6 +23,10 @@
  "roles": [
   {
    "role": "System Manager"
+  },
+  {
+   "role": "Purchase Manager"
   }
- ]
+ ],
+ "timeout": 0
 }

@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "format:{type}-{month}-{###}",
  "creation": "2024-06-30 21:22:11.596473",
@@ -51,6 +52,7 @@
    "fieldtype": "Section Break"
   },
   {
+   "allow_bulk_edit": 1,
    "fieldname": "item_records",
    "fieldtype": "Table",
    "label": "Item Records",
@@ -100,10 +102,11 @@
    "reqd": 1
   }
  ],
+ "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-11 14:27:26.554255",
+ "modified": "2025-03-24 15:03:13.064934",
  "modified_by": "Administrator",
  "module": "Erpnext Crystal Ball",
  "name": "Expected Sales",
@@ -120,6 +123,20 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "import": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Purchase Manager",
    "submit": 1,
    "write": 1
   }
