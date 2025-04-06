@@ -4,6 +4,14 @@ app_publisher = "Carlos"
 app_description = "Financial Projection Module"
 app_email = "carlos@axentor.net"
 app_license = "mit"
+
+
+fixtures = [
+    {
+        "doctype": "Custom Field",
+        "filters": [["dt", "=", "BOM"]]  
+    }
+]
 # required_apps = []
 
 # Includes in <head>
