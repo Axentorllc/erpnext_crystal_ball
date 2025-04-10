@@ -11,7 +11,7 @@
  "is_standard": "Yes",
  "letter_head": "HCPC Main Printing Style",
  "letterhead": null,
- "modified": "2025-03-18 11:38:42.516502",
+ "modified": "2025-04-10 13:36:45.746366",
  "modified_by": "Administrator",
  "module": "Erpnext Crystal Ball",
  "name": "Expected Sales Forcast",
@@ -23,6 +23,9 @@
  "roles": [
   {
    "role": "Purchase Manager"
+  },
+  {
+   "role": "Manufacturing Manager"
   }
  ],
  "timeout": 0
