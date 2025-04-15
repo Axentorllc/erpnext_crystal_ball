@@ -7,13 +7,9 @@
  "engine": "InnoDB",
  "field_order": [
   "item_code",
-  "column_break_ajsr",
   "item_name",
-  "column_break_uvsj",
   "qty",
-  "column_break_izcu",
   "stock_uom",
-  "column_break_izna",
   "is_promotion"
  ],
  "fields": [
@@ -26,41 +22,19 @@
    "reqd": 1
   },
   {
-   "fieldname": "column_break_ajsr",
-   "fieldtype": "Column Break"
-  },
-  {
    "fetch_from": "item_code.item_name",
    "fieldname": "item_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Item Name"
-  },
-  {
-   "fieldname": "column_break_izcu",
-   "fieldtype": "Column Break"
   },
   {
    "fetch_from": "item_code.stock_uom",
    "fieldname": "stock_uom",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Stock UOM",
-   "options": "UOM",
-   "reqd": 1
-  },
-  {
-   "fieldname": "qty",
-   "fieldtype": "Float",
-   "label": "Qty",
-   "reqd": 1
-  },
-  {
-   "fieldname": "column_break_uvsj",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "column_break_izna",
-   "fieldtype": "Column Break"
+   "read_only": 1
   },
   {
    "default": "0",
@@ -68,12 +42,20 @@
    "fieldtype": "Check",
    "in_list_view": 1,
    "label": "Is Promotion"
+  },
+  {
+   "fieldname": "qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Qty",
+   "reqd": 1
   }
  ],
+ "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-03-11 14:05:19.932461",
+ "modified": "2025-04-15 16:54:08.717551",
  "modified_by": "Administrator",
  "module": "Erpnext Crystal Ball",
  "name": "Item records",
