@@ -8,42 +8,17 @@ from frappe.model.document import Document
 class ExpectedSales(Document):
 	
 	def validate(self):
-		self.validate_fetching_item_name()
-		self.fetch_item_records()
+		self.check_for_duplicate_item_codes()
 		self.validate_expected_date()
 		
-	def validate_fetching_item_name(self):
-		
-		for item in self.item_records:
-			item_name=frappe.db.get_value('Item',item.item_code,'item_name')
-			if not item_name:
-				return
-	
 	def validate_expected_date(self):
 		if self.expected_end<self.expected_date:
 			frappe.throw("Please make sure that the Expected End is bigger")
     
-	def fetch_item_records(self):
-		Item_BOM=[]
-		Item_QTY=[]
-		is_selected=[]
-
+	def check_for_duplicate_item_codes(self):
+		item_codes = []
 		for item in self.item_records:
-            
-			id=item.idx
-			item_code=item.item_code
-			item_bom=frappe.db.get_value('Item',item.item_code,'default_bom')
-
-			if item_code in is_selected:
-				frappe.msgprint(f"The item code {item_code} is already in the list at raw{id} .")
-
+			if item.item_code in item_codes:
+				frappe.msgprint(f"The item code {item.item_code} is already in the list at row {item.idx}.")
 			else:
-				is_selected.append(item_code)
-				Item_BOM.append(item_bom)
-				Item_QTY.append(item.qty)
-			
-		return Item_BOM, Item_QTY
-    
-
-	
-			
+				item_codes.append(item.item_code)
