@@ -6,16 +6,14 @@ from frappe import _
 from erpnext.manufacturing.report.bom_stock_calculated.bom_stock_calculated import execute as execute_base_report
 from erpnext_crystal_ball.erpnext_crystal_ball.doctype.expected_sales.expected_sales import ExpectedSales
 from erpnext.stock.report.stock_projected_qty.stock_projected_qty import execute as execute_proj_qty
-
+import datetime
+from datetime import datetime ,timedelta
+from dateutil.relativedelta import relativedelta
 
 def execute(filters=None):
 	""" Main function to generate the report """
 
-	# Define months
-	months = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    ] 
+	months=get_months_range(filters.get("from_date"),filters.get("to_date"))
 
 	columns, data = get_columns(months), get_data(filters,months)
 	return columns, data
@@ -46,6 +44,15 @@ def get_columns(months):
 	]
 
 	for month in months:
+		for week in range(1, 6):
+			columns.append(
+				{
+					"fieldname": f"week_{week}_{month}_com",
+					"label": _(f"Week {week} {month} Committed"),
+					"fieldtype": "Float",
+					"width": 120,
+				}
+			),
 		columns.append({
 			"fieldname": f"{month}_com",
 			"label": _(f"{month} Commited"),
@@ -90,8 +97,16 @@ def process_sales_data(months,filters=None):
 	processed_data = []
 	processed_items_dict = {}
 	
-	not_rolling_list=frappe.db.get_list("Expected Sales",fields=['name',],
-									filters={'type': ['!=', 'Rolling'],'docstatus':1,},pluck='name')
+	not_rolling_list = frappe.db.get_list("Expected Sales",
+		fields=['name'],
+		filters={
+			'type': ['!=', 'Rolling'],
+			'docstatus': 1,
+			'month': ['in', months],
+		},
+		pluck='name'
+	)
+
 	
 	expected_sales_docs=get_latest_rolling_list(months,expected_sales_docs)
 	expected_sales_docs.extend(not_rolling_list)
@@ -125,47 +140,54 @@ def get_latest_rolling_list(months,expected_sales_docs):
 	return expected_sales_docs
 
 def process_sales_items(expected_sales_docs, processed_items_dict, months):
-    """Processes each sales item in the expected_sales_docs.
-    
-    Updates the processed items dictionary, aggregating available quantities for each fg-item.
-    """
+	"""Processes each sales item in the expected_sales_docs.
+	
+	Updates the processed items dictionary, aggregating available quantities for each fg-item.
+	"""
 
-    for name in expected_sales_docs:
-        sales_doc = frappe.get_doc("Expected Sales", name)
-        item_records = sales_doc.item_records
+	for name in expected_sales_docs:
+		sales_doc = frappe.get_doc("Expected Sales", name)
+		
+		item_records = sales_doc.item_records
 
-        for item in item_records:
-            item_code, item_name, item_qty, is_promotion = (
-                item.item_code, item.item_name, item.qty, item.is_promotion
-            )
+		for item in item_records:
+			item_code= item.item_code
+			# Fetch available FG qty in all stocks
+			fg_stock_qty = get_fg_stock_qty(item_code)
 
-            # Fetch available FG qty in all stocks
-            fg_stock_qty = get_fg_stock_qty(item_code)
+			if item_code not in processed_items_dict:
+				# Initialize data structure
+				processed_items_dict[item_code] = {
+					"code": item.item_code,
+					"item_name": item.item_name,
+					"avil_qty": fg_stock_qty,
+					**{f"{month}_com": 0 for month in months},
+					**{f"{month}_rol": 0 for month in months},
+					**{f"{month}_ann": 0 for month in months},
+					**{month: 0 for month in months},
+				}
+				for month in months:
+					for week in range(1, 6):
+						processed_items_dict[item_code][f"week_{week}_{month}_com"] = 0
 
-            if item_code not in processed_items_dict:
-                # Initialize data structure
-                processed_items_dict[item_code] = {
-                    "code": item_code,
-                    "item_name": item_name,
-                    "avil_qty": fg_stock_qty,
-                    **{f"{month}_com": 0 for month in months},
-                    **{f"{month}_rol": 0 for month in months},
-                    **{f"{month}_ann": 0 for month in months},
-                    **{month: 0 for month in months},
-                }
+			if sales_doc.type == 'Committed':
+				
+				week_num = get_week_number(sales_doc.expected_date)
+				week_key = f"week_{week_num}_{sales_doc.month}_{sales_doc.type.lower()[:3]}"
+				processed_items_dict[item_code][week_key] += item.qty
 
-            column_key = f"{sales_doc.month}_{sales_doc.type.lower()[:3]}"  # 'month_com', 'month_rol', 'month_ann'
-            processed_items_dict[item_code][column_key] += item_qty
+			column_key = f"{sales_doc.month}_{sales_doc.type.lower()[:3]}"  # 'month_com', 'month_rol', 'month_ann'
+			processed_items_dict[item_code][column_key] += item.qty
 
-            # Update the total for the month
-            if sales_doc.type == 'Committed':
-                processed_items_dict[item_code][sales_doc.month] = processed_items_dict[item_code][column_key]
-            elif sales_doc.type == 'Rolling':
-                processed_items_dict[item_code][sales_doc.month] = processed_items_dict[item_code][column_key]
-            elif sales_doc.type == 'Annual' and processed_items_dict[item_code][f"{sales_doc.month}_rol"] == 0:
-                processed_items_dict[item_code][sales_doc.month] = processed_items_dict[item_code][column_key]
+			# Update the total for the month
+			if sales_doc.type == 'Committed':
+				processed_items_dict[item_code][sales_doc.month] = processed_items_dict[item_code][column_key]
+			elif sales_doc.type == 'Rolling':
+				processed_items_dict[item_code][sales_doc.month] = processed_items_dict[item_code][column_key]
+			elif sales_doc.type == 'Annual' and processed_items_dict[item_code][f"{sales_doc.month}_rol"] == 0:
+				processed_items_dict[item_code][sales_doc.month] = processed_items_dict[item_code][column_key]
 
-    return processed_items_dict
+	return processed_items_dict
 
 def get_fg_stock_qty(item_code):
 	"""
@@ -180,3 +202,24 @@ def get_fg_stock_qty(item_code):
 		fg_stock_qty+=raw.get('actual_qty')
 
 	return fg_stock_qty
+
+def get_week_number(date_obj):
+    """Returns the week number of a given date in its month (Fixed 5 weeks)."""
+    return (date_obj.day - 1) // 7 + 1
+
+def get_months_range(from_date_str,to_date_str):
+
+		"""Generate a list of month names between the given date range."""
+
+		from_date = datetime.strptime(from_date_str, '%Y-%m-%d')
+		to_date = datetime.strptime(to_date_str, '%Y-%m-%d')
+
+		months=[]
+		current_date=from_date
+		while current_date <= to_date:
+			month_name= current_date.strftime('%B')
+			if month_name not in months:
+				months.append(month_name)
+			current_date += relativedelta(months=1)
+		
+		return months

@@ -1,4 +1,4 @@
-// Copyright (c) 2024, Carlos and contributors
+// Copyright (c) 2024, Axentor and contributors
 // For license information, please see license.txt
 // import DataTable from "frappe-datatable"
 
@@ -9,6 +9,20 @@ frappe.query_reports["Expected Sales Forcast"] = {
 			label: __("Fiscal Year"),
 			fieldtype: "Link",
 			options:"Fiscal Year",
+			reqd:1
+			
+		},
+		{
+			fieldname: "from_date",
+			label: __("From Date"),
+			fieldtype: "Date",
+			reqd:1
+			
+		},
+		{
+			fieldname: "to_date",
+			label: __("To Date"),
+			fieldtype: "Date",
 			reqd:1
 			
 		},
