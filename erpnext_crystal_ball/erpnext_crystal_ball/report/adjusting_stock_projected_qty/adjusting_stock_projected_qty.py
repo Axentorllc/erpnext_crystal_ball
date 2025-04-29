@@ -148,7 +148,7 @@ class AdjustedStockQty:
         """Fetch and process the required data based on filters."""
 
         # Get forecast data
-        exp_forcast = frappe._dict({"fiscal_year": self.fiscal_year})
+        exp_forcast = frappe._dict({"from_date":self.filters.get('from_date'),"to_date":self.filters.get("to_date"),"fiscal_year": self.fiscal_year})
         cols, fg_forcast = execute_exp_forcast(exp_forcast)
 
         for month in self.months:
