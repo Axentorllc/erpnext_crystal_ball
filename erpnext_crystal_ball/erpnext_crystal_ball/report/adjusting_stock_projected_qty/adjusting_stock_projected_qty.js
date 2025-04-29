@@ -20,10 +20,14 @@ frappe.query_reports["Adjusting Stock Projected Qty"] = {
 		},
 		{
 			fieldname: "material_type",
-			label: __("Group_by"),
+			label: __("Group By"),
 			fieldtype: "Select",
-			options: "\nraw material\npack material",
-
+			options: [
+				"all",
+				"raw material",
+				"pack material"
+			],
+			
 		},
 		{
 			fieldname: "fiscal_year",
