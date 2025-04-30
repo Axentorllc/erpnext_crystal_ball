@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
-import datetime
+from datetime import datetime
 
 class ExpectedSales(Document):
 	
@@ -17,7 +17,7 @@ class ExpectedSales(Document):
 				expected_start = self.expected_date
 
 			week_num=self.get_week_number(expected_start)
-			self.name = f"Committed-{self.month}-{self.fiscal_year}-week{week_num}"
+			self.name = f"Committed-{self.month}-{self.fiscal_year}-week {week_num}"
 
 	def validate(self):
 		self.check_for_duplicate_item_codes()
