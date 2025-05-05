@@ -9,7 +9,7 @@ app_license = "mit"
 fixtures = [
     {
         "doctype": "Custom Field",
-        "filters": [["dt", "=", "BOM"]]  
+        "filters": [["dt", "in", ["BOM", "Workstation"]]]  
     }
 ]
 # required_apps = []
