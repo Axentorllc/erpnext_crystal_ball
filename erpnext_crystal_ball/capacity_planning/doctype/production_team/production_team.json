@@ -1,0 +1,98 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:team_name",
+ "creation": "2025-04-27 16:08:36.491126",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_9knv",
+  "amended_from",
+  "team_name",
+  "team_leader",
+  "leader_name",
+  "shift",
+  "operation",
+  "team_member"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_9knv",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Production Team",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "team_name",
+   "fieldtype": "Data",
+   "label": "Team Name",
+   "unique": 1
+  },
+  {
+   "fieldname": "team_leader",
+   "fieldtype": "Link",
+   "label": "Team Leader",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "operation",
+   "fieldtype": "Table",
+   "label": "Operation ",
+   "options": "Operation Link"
+  },
+  {
+   "fieldname": "shift",
+   "fieldtype": "Link",
+   "label": "Shift",
+   "options": "Shift Type"
+  },
+  {
+   "fetch_from": "team_leader.employee_name",
+   "fieldname": "leader_name",
+   "fieldtype": "Read Only",
+   "label": "Leader Name"
+  },
+  {
+   "fieldname": "team_member",
+   "fieldtype": "Table",
+   "label": "Team Member",
+   "options": "Team Member"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-05-04 14:59:22.130729",
+ "modified_by": "Administrator",
+ "module": "Capacity Planning",
+ "name": "Production Team",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
