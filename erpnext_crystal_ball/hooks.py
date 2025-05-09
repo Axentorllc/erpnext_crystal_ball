@@ -9,7 +9,7 @@ app_license = "mit"
 fixtures = [
     {
         "doctype": "Custom Field",
-        "filters": [["dt", "in", ["BOM", "Workstation", "Operation","Item"]],
+        "filters": [["dt", "in", ["BOM", "Workstation", "Operation","Item","Routing"]],
                     ["modified", ">", "2025-01-01"]]
     }
 ]
