@@ -350,7 +350,7 @@
   "columns": 0,
   "default": null,
   "depends_on": null,
-  "description": "Number of hours expected to manufacture the item.",
+  "description": "Estimated time (in mins) required to manufacture the item based on its routing operations.",
   "docstatus": 0,
   "doctype": "Custom Field",
   "dt": "Item",
