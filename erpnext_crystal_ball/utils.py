@@ -41,3 +41,28 @@ def get_fg_stock_qty(item_code):
 		fg_stock_qty+=raw.get('actual_qty')
 
 	return fg_stock_qty
+
+@frappe.whitelist()
+def get_item_expected_time(routing):
+	"""
+	fetches the expected time for a given item based on its routing.
+	""""""
+	Calculate the total expected manufacturing time for an item 
+	based on its associated Routing operations.
+
+	Args:
+		routing (str): The name of the Routing document.
+
+	Returns:
+		float: Total time in minutes required to complete all operations.
+	"""
+	
+	routing_doc=frappe.get_doc('Routing',routing)
+
+	expected_time=0
+
+	# Loop through each operation in the Routing document
+	for operation in routing_doc.operations:
+		expected_time+=operation.time_in_mins or 0
+
+	return expected_time
