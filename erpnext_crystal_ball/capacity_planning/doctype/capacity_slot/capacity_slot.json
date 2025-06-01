@@ -1,0 +1,168 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{workstation}-{###}",
+ "creation": "2025-05-12 14:25:16.924895",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_2jmi",
+  "workstation",
+  "ws_dimension",
+  "expected_start",
+  "expected_end",
+  "amended_from",
+  "column_break_sdce",
+  "item",
+  "item_name",
+  "project",
+  "item_qty",
+  "item_dimension",
+  "expected_time",
+  "section_break_haui",
+  "column_break_oidl",
+  "operation",
+  "operation_time",
+  "operation_start",
+  "operation_end",
+  "production_team"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_2jmi",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fetch_from": "project.expected_start_date",
+   "fieldname": "expected_start",
+   "fieldtype": "Datetime",
+   "label": "Expected Start"
+  },
+  {
+   "fetch_from": "project.expected_end_date",
+   "fieldname": "expected_end",
+   "fieldtype": "Datetime",
+   "label": "Expected End"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Capacity Slot",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "workstation",
+   "fieldtype": "Link",
+   "label": "Workstation",
+   "options": "Workstation"
+  },
+  {
+   "fieldname": "ws_dimension",
+   "fieldtype": "Float",
+   "label": "Workstation Dimension"
+  },
+  {
+   "fieldname": "item",
+   "fieldtype": "Link",
+   "label": "Item",
+   "options": "Item"
+  },
+  {
+   "fieldname": "column_break_sdce",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "item.item_name",
+   "fieldname": "item_name",
+   "fieldtype": "Read Only",
+   "label": "Item Name"
+  },
+  {
+   "fieldname": "item_qty",
+   "fieldtype": "Int",
+   "label": "Item Qty"
+  },
+  {
+   "fieldname": "item_dimension",
+   "fieldtype": "Float",
+   "label": "Item Dimension"
+  },
+  {
+   "fieldname": "expected_time",
+   "fieldtype": "Float",
+   "label": "Expected Time"
+  },
+  {
+   "fieldname": "column_break_oidl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "operation",
+   "fieldtype": "Link",
+   "label": "Operation",
+   "options": "Operation"
+  },
+  {
+   "fieldname": "operation_time",
+   "fieldtype": "Float",
+   "label": "Operation Time"
+  },
+  {
+   "fieldname": "operation_start",
+   "fieldtype": "Datetime",
+   "label": "Operation Start"
+  },
+  {
+   "fieldname": "operation_end",
+   "fieldtype": "Datetime",
+   "label": "Operation End"
+  },
+  {
+   "fieldname": "production_team",
+   "fieldtype": "Link",
+   "label": "Production Team",
+   "options": "Production Team"
+  },
+  {
+   "fieldname": "section_break_haui",
+   "fieldtype": "Section Break",
+   "label": "Operation Details"
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-05-25 01:22:17.854653",
+ "modified_by": "Administrator",
+ "module": "Capacity Planning",
+ "name": "Capacity Slot",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
